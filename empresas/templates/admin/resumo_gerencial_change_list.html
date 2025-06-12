@@ -1,0 +1,147 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls static admin_list %}
+{% load humanize %}
+
+{% block extrastyle %}
+{{ block.super }}
+<link rel="stylesheet" type="text/css" href="{% static " admin/css/forms.css" %}">
+<style>
+    /* Seu CSS existente para os cards */
+    .card-container {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+    }
+
+    .card {
+        background: #f8f8f8;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        flex: 1;
+        min-width: 250px;
+    }
+
+    .big-number {
+        font-size: 2em;
+        font-weight: bold;
+        margin: 10px 0;
+        color: #447e9b;
+    }
+
+    h1 {
+        color: #333;
+        margin-bottom: 30px;
+    }
+
+    h2 {
+        color: #666;
+        margin-top: 40px;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 10px;
+    }
+
+    h3 {
+        color: #447e9b;
+    }
+
+    ol {
+        padding-left: 20px;
+    }
+
+    /* Ajustes para o layout geral do admin */
+    #content-main {
+        padding: 20px;
+    }
+
+    .main #content {
+        padding: 0;
+        /* Remove padding duplicado se base_site já tiver */
+    }
+
+    .module h2,
+    .module caption,
+    .inline-group h2 {
+        margin-top: 0;
+    }
+</style>
+{% endblock extrastyle %}
+
+{% block content %}
+<div id="content-main">
+    <div class="module">
+        <h1>Resumo Gerencial</h1>
+
+        <div class="card-container">
+            <div class="card">
+                <h2>Empresas</h2>
+                <p class="big-number">{{ total_empresas|intcomma }}</p>
+            </div>
+
+            <div class="card">
+                <h2>Usuários Comuns</h2>
+                <p class="big-number">{{ total_usuarios|intcomma }}</p>
+            </div>
+
+            <div class="card">
+                <h2>Gestores</h2>
+                <p class="big-number">{{ total_gestores|intcomma }}</p>
+            </div>
+
+            <div class="card">
+                <h2>Média Usuários/Gestor</h2>
+                <p class="big-number">{{ media_usuarios_por_gestor }}</p>
+            </div>
+        </div>
+
+        <h2>Médias por Modalidade Tarifária</h2>
+        <div class="card-container">
+            <div class="card">
+                <h3>Modalidade Verde</h3>
+                <p>Consumo Ponta: {{ verde_stats.media_consumo_ponta|floatformat:2|intcomma }} kWh</p>
+                <p>Consumo Fora Ponta: {{ verde_stats.media_consumo_fora_ponta|floatformat:2|intcomma }} kWh</p>
+                <p>Valor Médio Fatura: R$ {{ verde_stats.media_valor_fatura|floatformat:2|intcomma }}</p>
+            </div>
+
+            <div class="card">
+                <h3>Modalidade Azul</h3>
+                <p>Consumo Ponta: {{ azul_stats.media_consumo_ponta|floatformat:2|intcomma }} kWh</p>
+                <p>Consumo Fora Ponta: {{ azul_stats.media_consumo_fora_ponta|floatformat:2|intcomma }} kWh</p>
+                <p>Valor Médio Fatura: R$ {{ azul_stats.media_valor_fatura|floatformat:2|intcomma }}</p>
+            </div>
+        </div>
+
+        <h2>Top 5 Empresas</h2>
+        <div class="card-container">
+            <div class="card">
+                <h3>Maior Valor de Fatura</h3>
+                <ol>
+                    {% for empresa in top5_valor_fatura %}
+                    <li>{{ empresa.razao_social }} - R$ {{ empresa.valor_medio_fatura|floatformat:2|intcomma }}</li>
+                    {% endfor %}
+                </ol>
+            </div>
+
+            <div class="card">
+                <h3>Maior Consumo Ponta</h3>
+                <ol>
+                    {% for empresa in top5_consumo_ponta %}
+                    <li>{{ empresa.razao_social }} - {{ empresa.consumo_ponta_kwh|floatformat:2|intcomma }} kWh</li>
+                    {% endfor %}
+                </ol>
+            </div>
+
+            <div class="card">
+                <h3>Maior Consumo Fora Ponta</h3>
+                <ol>
+                    {% for empresa in top5_consumo_fora_ponta %}
+                    <li>{{ empresa.razao_social }} - {{ empresa.consumo_fora_ponta_kwh|floatformat:2|intcomma }} kWh
+                    </li>
+                    {% endfor %}
+                </ol>
+            </div>
+        </div>
+    </div> {# .module #}
+</div> {# #content-main #}
+{% endblock content %}
