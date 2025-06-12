@@ -46,6 +46,7 @@ THIRDY_PARTY_APPS = [
 MY_APPS = [
     "users",
     "empresas",
+
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRDY_PARTY_APPS + MY_APPS

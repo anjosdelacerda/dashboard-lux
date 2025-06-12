@@ -4,7 +4,7 @@ from users.models import User
 
 class FuncionariosInline(admin.TabularInline):
     model = User
-    fields = ("username", "email", "cargo", "identificador")
+    fields = ("username","first_name","email", "cargo", "identificador")
     extra = 0
     readonly_fields = fields
     can_delete = False
@@ -23,5 +23,10 @@ class EmpresaAdmin(admin.ModelAdmin):
 
     def has_delete_permission(self, request, obj=None):
         return False
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "gestor_responsavel_fk":
+            kwargs["queryset"] = User.objects.filter(is_gestor=True)
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 admin.site.register(Empresa, EmpresaAdmin)

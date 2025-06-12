@@ -13,7 +13,7 @@ class User(AbstractUser):
     identificador = models.CharField(max_length=20, choices=IdentificadorChoices.choices)
     cargo = models.CharField(max_length=150, blank=True, null=True)
     empresa = models.ForeignKey(
-        Empresa,
+        'empresas.Empresa',
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -38,3 +38,9 @@ class User(AbstractUser):
             generated_password = self.generate_random_password()
             self.password = make_password(generated_password)
         super().save(*args, **kwargs)
+    
+    def __str__(self):
+        return self.first_name or self.username
+
+    
+    
