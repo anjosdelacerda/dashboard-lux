@@ -41,6 +41,25 @@ class User(AbstractUser):
     
     def __str__(self):
         return self.first_name or self.username
+    
+class Gestor(User):
+    class Meta:
+        proxy = True
+        verbose_name = 'Gestor'
+        verbose_name_plural = 'Gestores'
+
+    def save(self, *args, **kwargs):
+        self.is_gestor = True
+        super().save(*args, **kwargs)
+
+    def get_empresas_geridas(self):
+        return self.empresas_geridas.all()
+
+    def get_funcionarios(self):
+        empresas = self.empresas_geridas.all()
+        return User.objects.filter(empresa__in=empresas)
+
+
 
     
     

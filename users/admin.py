@@ -3,7 +3,11 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django import forms
-from .models import User
+from .models import User, Gestor
+from django.utils.html import format_html 
+from django.urls import reverse 
+from django.utils.safestring import mark_safe
+
 
 class CustomUserAdmin(UserAdmin):
     list_filter = ()
@@ -45,3 +49,42 @@ class CustomUserAdmin(UserAdmin):
     first_name_display.short_description = 'Nome'
 
 admin.site.register(User, CustomUserAdmin)
+
+class GestorAdmin(admin.ModelAdmin):
+    list_display = ('username', 'email', 'first_name_display', 'telefone', 'view_funcionarios_link')
+    list_filter = ()
+    search_fields = ('username', 'email', 'first_name')
+    readonly_fields = ('id', 'last_login', 'date_joined', 'funcionarios_list')
+    fieldsets = (
+        (None, {"fields": ("username", "password")}),
+        ("Informações pessoais", {"fields": ("first_name", "email", "telefone")}),
+        ("Funcionários gerenciados", {"fields": ("funcionarios_list",)}),
+        ("Datas importantes", {"fields": ("last_login", "date_joined")}),
+    )
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).filter(is_gestor=True)
+
+    def first_name_display(self, obj):
+        return obj.first_name
+    first_name_display.short_description = 'Nome'
+
+    def funcionarios_list(self, obj):
+        funcionarios = obj.get_funcionarios()
+        if not funcionarios.exists():
+            return "Nenhum funcionário gerenciado"
+        
+        html = "<ul>"
+        for func in funcionarios:
+            html += f"<li>{func.first_name} ({func.email}), {func.telefone} - {func.empresa.empresa if func.empresa else 'Sem empresa'} - {func.cargo}</li>"
+        html += "</ul>"
+        return mark_safe(html)
+    funcionarios_list.short_description = "Funcionários Gerenciados"
+
+    def view_funcionarios_link(self, obj):
+        count = obj.get_funcionarios().count()
+        url = reverse('admin:users_user_changelist') + f'?empresa__gestor_responsavel_fk__id__exact={obj.id}'
+        return format_html('<a href="{}">{} Funcionário(s)</a>', url, count)
+    view_funcionarios_link.short_description = "Funcionários"
+
+admin.site.register(Gestor, GestorAdmin)
