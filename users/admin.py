@@ -1,5 +1,3 @@
-# users/admin.py
-
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django import forms
@@ -51,7 +49,7 @@ class CustomUserAdmin(UserAdmin):
 admin.site.register(User, CustomUserAdmin)
 
 class GestorAdmin(admin.ModelAdmin):
-    list_display = ('username', 'email', 'first_name_display', 'telefone', 'view_funcionarios_link')
+    list_display = ('username', 'email', 'first_name_display', 'telefone')
     list_filter = ()
     search_fields = ('username', 'email', 'first_name')
     readonly_fields = ('id', 'last_login', 'date_joined', 'funcionarios_list')
@@ -61,9 +59,13 @@ class GestorAdmin(admin.ModelAdmin):
         ("Funcionários gerenciados", {"fields": ("funcionarios_list",)}),
         ("Datas importantes", {"fields": ("last_login", "date_joined")}),
     )
+    actions = None
 
     def get_queryset(self, request):
         return super().get_queryset(request).filter(is_gestor=True)
+    
+    def has_delete_permission(self, request, obj=None):
+        return False
 
     def first_name_display(self, obj):
         return obj.first_name
@@ -76,7 +78,7 @@ class GestorAdmin(admin.ModelAdmin):
         
         html = "<ul>"
         for func in funcionarios:
-            html += f"<li>{func.first_name} ({func.email}), {func.telefone} - {func.empresa.empresa if func.empresa else 'Sem empresa'} - {func.cargo}</li>"
+            html += f"<li>{func.first_name} ({func.email}), {func.telefone} - {func.empresa.razao_social if func.empresa else 'Sem empresa'} - {func.cargo}</li>"
         html += "</ul>"
         return mark_safe(html)
     funcionarios_list.short_description = "Funcionários Gerenciados"

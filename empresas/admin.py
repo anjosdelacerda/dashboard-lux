@@ -1,5 +1,3 @@
-# empresas/admin.py
-
 from django.contrib import admin
 from .models import Empresa, ResumoGerencial
 from users.models import User
@@ -17,7 +15,7 @@ class FuncionariosInline(admin.TabularInline):
 
 class EmpresaAdmin(admin.ModelAdmin):
     list_filter = ()
-    list_display = ("empresa", "cnpj", "distribuidora", "modalidade_tarifaria", "gestor_nome")
+    list_display = ("empresa", "razao_social", "distribuidora", "modalidade_tarifaria", "gestor_nome")
     search_fields = ("empresa", "cnpj", "distribuidora")
     readonly_fields = ("id",)
     inlines = [FuncionariosInline]
@@ -54,7 +52,7 @@ class ResumoGerencialAdmin(admin.ModelAdmin):
         context = {
             **self.admin_site.each_context(request),
             'opts': self.model._meta,
-            'app_label': self.model._meta.app_label, # Adicione esta linha
+            'app_label': self.model._meta.app_label, 
             **estatisticas
         }
         return render(request, self.change_list_template, context)
