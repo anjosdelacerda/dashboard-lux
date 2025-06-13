@@ -71,6 +71,7 @@ Siga os passos abaixo para configurar e iniciar o projeto:
 
 * **Banco de Dados Populado:** Subir um banco de dados junto com o repositório é uma prática de desenvolvimento geralmente evitada em projetos maiores por questões de segurança e versionamento. No entanto, para este teste técnico, o banco de dados `db.sqlite3` já está incluído com os dados da planilha populados, permitindo uma inicialização rápida.
 * **Recriação do Banco de Dados:** Caso queira apagar o banco de dados existente (`db.sqlite3`) e recriar tudo do zero, o arquivo `import_excel.py` (localizado na pasta `data/`, presumindo que você tenha um) poderá ser executado **após** as migrações serem criadas e geradas (`python manage.py makemigrations` e `python manage.py migrate`).
+* **Superuser:** Caso ocorra problemas com registro de usuário, o que é improvavel, você poderá se logar com essas credenciais => user: nando - password:1234; Todos os campos de deleção de dados do banco foram desabilitados, mas você poderá ver e editar o que quiser.
 
 ---
 
