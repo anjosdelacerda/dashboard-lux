@@ -1,0 +1,51 @@
+{% extends "admin/base.html" %}
+{% load i18n static %}
+
+{% block title %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block branding %}
+<h1 id="site-name">
+    <a href="{% url 'admin:index' %}" style="color: white; font-weight: bold;"> {# Adicionei estilos inline aqui #}
+        LUX Energia
+    </a>
+</h1>
+{% endblock %}
+
+{% block nav-global %}
+{# Este bloco permanece para ocultar o menu de usuário no register.html, conforme você já configurou #}
+    {% if user.is_active and user.is_staff %}
+        <div class="nav-user-tools">
+            <span class="user-info">Bem-vindo, {{ user.get_full_name|default:user.username }}</span>
+            <a href="{% url 'admin:logout' %}" class="logout-link">Sair</a>
+            <a href="{% url 'admin:password_change' %}" class="change-password-link">Mudar senha</a>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+<style>
+    .login-msg {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 14px;
+    }
+    .login-msg a {
+        color: #007bff;
+        text-decoration: none;
+    }
+    .login-msg a:hover {
+        text-decoration: underline;
+    }
+    .errorlist {
+        list-style: none;
+        padding: 0;
+        color: red;
+        margin-bottom: 10px;
+    }
+    ul.errorlist li {
+        margin-bottom: 5px;
+    }
+
+</style>
+{% endblock %}

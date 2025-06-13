@@ -1,0 +1,119 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}{{ block.super }}
+<link rel="stylesheet" href="{% static "admin/css/login.css" %}">
+<style>
+    #content-main input[type="text"],
+    #content-main input[type="email"],
+    #content-main input[type="password"] {
+        width: 100%; 
+        box-sizing: border-box; 
+        padding: 8px 12px; 
+        margin-bottom: 10px; 
+        border: 1px solid #ccc;
+        border-radius: 4px; 
+        font-size: 14px; 
+    }
+
+    #content-main select {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 8px 12px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+
+    #content-main .submit-row input[type="submit"] {
+        width: 100%;
+        padding: 10px 15px;
+        background-color: #4CAF50; 
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    #content-main .submit-row input[type="submit"]:hover {
+        background-color: #45a049;
+    }
+
+    ul.errorlist {
+        color: red;
+        margin-left: 0;
+        padding-left: 0;
+        list-style: none;
+    }
+    ul.errorlist li {
+        margin-bottom: 5px;
+    }
+
+</style>
+{% endblock %}
+
+{% block bodyclass %}{{ block.super }} login{% endblock %}
+
+{% block usertools %}{% endblock %} {# Oculta o menu "welcome" #}
+{% block nav-global %}{% endblock %} {# Oculta "View site", "Change password", "Log out" #}
+
+{% block content_title %}{% endblock %}
+
+{% block breadcrumbs %}{% endblock %}
+
+{% block content %}
+<div id="content-main">
+    <form action="{% url 'register' %}" method="post" id="login-form">
+        {% csrf_token %}
+        <div class="form-row">
+        {{ form.username.errors }}
+        {{ form.username.label_tag }}
+        {{ form.username }}
+        </div>
+        <div class="form-row">
+            {{ form.first_name.errors }}
+            {{ form.first_name.label_tag }}
+            {{ form.first_name }}
+        </div>
+        <div class="form-row">
+            {{ form.email.errors }}
+            {{ form.email.label_tag }}
+            {{ form.email }}
+        </div>
+        <div class="form-row">
+            {{ form.password1.errors }}
+            <label for="{{ form.password1.id_for_label }}">Senha:</label>
+            {{ form.password1 }}
+        </div>
+        <div class="form-row">
+            {{ form.password2.errors }}
+            <label for="{{ form.password2.id_for_label }}">Confirme a Senha:</label>
+            {{ form.password2 }}
+        </div>
+        {% if form.errors %}
+            <ul class="errorlist">
+                {% for field in form %}
+                    {% if field.errors %}
+                        {% for error in field.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    {% endif %}
+                {% endfor %}
+                {% if form.non_field_errors %}
+                    {% for error in form.non_field_errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                {% endif %}
+            </ul>
+        {% endif %}
+        <div class="submit-row">
+            <input type="submit" value="Registrar">
+        </div>
+        <p class="login-msg">
+            Já possui uma conta? <a href="{% url 'admin:index' %}">Faça o login aqui</a>
+        </p>
+    </form>
+</div>
+{% endblock %}

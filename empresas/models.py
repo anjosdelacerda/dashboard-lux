@@ -1,7 +1,7 @@
 import uuid
 from django.db import models
 from django.conf import settings
-from django.db.models import Count, Avg, Sum # Importe aqui para uso no método
+from django.db.models import Count, Avg, Sum 
 
 class Empresa(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -44,13 +44,10 @@ class ResumoGerencial(Empresa):
     @classmethod
     def get_estatisticas(cls):
         from users.models import User
-        from django.db.models import Count, Avg, Sum # Assegure-se que estão importados
-
+        from django.db.models import Count, Avg, Sum 
         total_gestores = User.objects.filter(is_gestor=True).count()
         total_usuarios = User.objects.filter(is_gestor=False, is_superuser=False).count()
 
-        # Adicione o tratamento para valores None
-        # Use __iexact para ignorar maiúsculas/minúsculas no filtro
         verde_stats_raw = Empresa.objects.filter(modalidade_tarifaria__iexact='Verde').aggregate(
             media_consumo_ponta=Avg('consumo_ponta_kwh'),
             media_consumo_fora_ponta=Avg('consumo_fora_ponta_kwh'),
