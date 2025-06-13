@@ -19,7 +19,7 @@ Siga os passos abaixo para configurar e iniciar o projeto:
 2.  **Navegue até o Diretório do Projeto:**
     Após clonar, entre na pasta do projeto:
     ```bash
-    cd <nome-da-pasta-do-repositorio>
+    cd nome-da-pasta-do-repositorio
     ```
 
 3.  **Crie e Ative o Ambiente Virtual (`venv`):**
