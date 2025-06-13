@@ -13,7 +13,7 @@ Siga os passos abaixo para configurar e iniciar o projeto:
 1.  **Clone o Repositório:**
     Abra seu terminal ou prompt de comando e execute:
     ```bash
-    git clone <git@github.com:anjosdelacerda/dashboard-lux.git>
+    git clone git@github.com:anjosdelacerda/dashboard-lux.git
     ```
 
 2.  **Navegue até o Diretório do Projeto:**
